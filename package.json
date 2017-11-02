@@ -1,0 +1,33 @@
+{
+  "name": "d3-redux",
+  "version": "0.0.1",
+  "description": "D3.js bindings for Redux",
+  "keywords": [
+    "d3",
+    "d3-module",
+    "redux"
+  ],
+  "license": "MIT",
+  "main": "build/d3-redux.js",
+  "jsnext:main": "index",
+  "homepage": "https://github.com/couchand/d3-redux",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/couchand/d3-redux.git"
+  },
+  "scripts": {
+    "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -g d3-selection:d3 -o build/d3-redux.js -- index.js",
+    "test": "tape 'test/**/*-test.js'",
+    "prepublish": "npm run test && uglifyjs build/d3-redux.js -c -m -o build/d3-redux.min.js",
+    "postpublish": "zip -j build/d3-redux.zip -- LICENSE README.md build/d3-redux.js build/d3-redux.min.js"
+  },
+  "devDependencies": {
+    "jsdom": "11",
+    "rollup": "0.27",
+    "tape": "4",
+    "uglify-js": "2"
+  },
+  "dependencies": {
+    "d3-selection": "^1.1.0"
+  }
+}
