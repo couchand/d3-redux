@@ -41,6 +41,13 @@ const destroyTodo = id => ({ type: "DESTROY", payload: { id } });
 trashCan.dispatchOn("click", d => destroyTodo(d.id));
 ```
 
+- [Installing](#installing)
+- [API Reference](#api-reference)
+  - [*selection*.provide](#selection_provide)
+  - [*selection*.dataFromState](#selection_dataFromState)
+  - [*selection*.datumFromState](#selection_datumFromState)
+  - [*selection*.dispatchOn](#selection_dispatchOn)
+
 ## Installing
 
 If you use NPM, `npm install d3-redux`. Otherwise, download the
