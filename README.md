@@ -58,11 +58,11 @@ If you use NPM, `npm install d3-redux`. Otherwise, download the
 All methods return the current selection, to facilitate D3's idiomatic
 method chaining style.
 
-<a href="#selection_provide" name="selection_provide">#</a> <i>selection</i>.<b>provide</b>(<i>store</i>)
+<a href="#selection_provide" name="selection_provide">#</a> <i>selection</i>.<b>provide</b>(<i>store</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/provide.js">&gt;&lt;</a>
 
 Provides the Redux *store* to nested components.
 
-<a href="#selection_dataFromState" name="selection_dataFromState">#</a> <i>selection</i>.<b>dataFromState</b>(<i>selector</i>[, <i>key</i>])
+<a href="#selection_dataFromState" name="selection_dataFromState">#</a> <i>selection</i>.<b>dataFromState</b>(<i>selector</i>[, <i>key</i>]) <a href="https://github.com/couchand/d3-redux/blob/master/src/dataFromState.js">&gt;&lt;</a>
 
 Calls the *selector*, passing in the current state from the previously-
 provided store, and forwards the result (as well as the *key*, if
@@ -71,7 +71,7 @@ Computes a data join.  _Note:_ this is a "selector" in the Redux and
 [reselect](https://github.com/reactjs/reselect) sense, not in the D3
 one - it is a unary function of the store's state.
 
-<a href="#selection_datumFromState" name="selection_datumFromState">#</a> <i>selection</i>.<b>datumFromState</b>(<i>selector</i>)
+<a href="#selection_datumFromState" name="selection_datumFromState">#</a> <i>selection</i>.<b>datumFromState</b>(<i>selector</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/datumFromState.js">&gt;&lt;</a>
 
 Calls the *selector*, passing in the current state from the previously-
 provided store, and forwards the result to
@@ -80,7 +80,7 @@ Does not computes a data join.  _Note:_ this is a "selector" in the
 Redux and [reselect](https://github.com/reactjs/reselect) sense, not
 in the D3 one - it is a unary function of the store's state.
 
-<a href="#selection_dispatchOn" name="selection_dispatchOn">#</a> <i>selection</i>.<b>dispatchOn</b>(<i>typenames</i>, <i>actionCreator</i>[, <i>capture</i>])
+<a href="#selection_dispatchOn" name="selection_dispatchOn">#</a> <i>selection</i>.<b>dispatchOn</b>(<i>typenames</i>, <i>actionCreator</i>[, <i>capture</i>]) <a href="https://github.com/couchand/d3-redux/blob/master/src/dispatchOn.js">&gt;&lt;</a>
 
 Attaches an event listener for the given *typenames* using
 [`selection.on()`](https://github.com/d3/d3-selection#selection_on).
