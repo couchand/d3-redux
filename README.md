@@ -47,6 +47,7 @@ trashCan.dispatchOn("click", d => destroyTodo(d.id));
   - [Coming from D3](#coming-from-d3)
 - [API Reference](#api-reference)
   - [*selection*.provide](#selection_provide)
+  - [*selection*.connect](#selection_connect)
   - [*selection*.dataFromState](#selection_dataFromState)
   - [*selection*.datumFromState](#selection_datumFromState)
   - [*selection*.dispatchOn](#selection_dispatchOn)
@@ -199,6 +200,34 @@ our todo creation to attach a handler that dispatches that action:
 +  .dispatchOn("change", d => updateTodo(d.id, this.value));
 ```
 
+Now we've handled the initial render, but how do we respond to state
+updates?  We could manually subscribe to the store, starting again at
+the top each time.  But we'd really like to use the third feature of
+connect, the automatic subscription.
+
+Just as with connect from react-redux, we first make a component.  In
+D3, we make a component by wrapping some code in a function that takes
+the selection as the only paramter, and then use the method `call`:
+
+```diff
+-const todoList = myApp.append("ul");
++myApp.append("ul")
++  .call(function (todoList) {
++    // data join code here...
++  });
+```
+
+Using *d3-redux*, we can change the call to connect, and our component
+will update any time the state changes:
+
+```diff
+ myApp.append("ul")
+-  .call(function (todoList) {
++  .connect(function (todoList) {
+     // data join code here...
+    });
+```
+
 That's it!  We've built the D3 side of a simple *d3-redux* app.
 
 ### Coming from D3
@@ -328,6 +357,34 @@ dispatches the result to the provided store:
 Now, assuming our reducer can handle this action type appropriately,
 we're good to go.
 
+Now to the matter of calling in to our D3 code when the Redux state
+updates.  A store offers the method `subscribe`, which allows us to
+listen for updates and respond to them.  We could just subscribe with
+our whole application, but there's a better way.  Much the same as
+`call` allows us to encapsulate a component's D3 logic, *d3-redux* has
+a method `connect`, which is like call, but will rerender when the
+state changes.
+
+If we first encapsulated the todo data join in a `call`, like this:
+
+```diff
+-const todoList = myApp.append("ul");
++myApp.append("ul")
++  .call(function (todoList) {
++    // data join code here...
++  });
+```
+
+Using connect to update on state change would just require:
+
+```diff
+ myApp.append("ul")
+-  .call(function (todoList) {
++  .connect(function (todoList) {
+     // data join code here...
+    });
+```
+
 One final note: in addition to `dataFromState`, there's `datumFromState`,
 which provides the corresponding decorated version of D3's `datum`.
 Remember that this just sets the current node's datum without computing
@@ -343,6 +400,13 @@ method chaining style.
 Provides the Redux *store* to this node and any nested nodes.  You can
 access the state and dispatch of this store by calling the various
 other methods.
+
+<a href="#selection_connect" name="selection_connect">#</a> <i>selection</i>.<b>connect</b>(<i>function</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/connect.js">&lt;&gt;</a>
+
+Calls the *function*, passing in the current selection.  A call is made
+immediately, and the selection subscribes to the store, calling the
+function again any time the state changes.  This is analogous to
+[*selection*.call](https://github.com/d3/d3-selection#selection_call).
 
 <a href="#selection_dataFromState" name="selection_dataFromState">#</a> <i>selection</i>.<b>dataFromState</b>(<i>selector</i>[, <i>key</i>]) <a href="https://github.com/couchand/d3-redux/blob/master/src/dataFromState.js">&lt;&gt;</a>
 
