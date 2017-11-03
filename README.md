@@ -436,9 +436,11 @@ the `this` context is set to the current node.
 
 Attaches an event listener for the given *typenames* using
 [*selection*.on](https://github.com/d3/d3-selection#selection_on).
-If it is truty, the return value of *actionCreator* is forwarded on to
+If it is truthy, the return value of *actionCreator* is forwarded on to
 the dispatch method of the previously-provided store.
 
 The *actionCreator* is called in the same way that a handler passed to
 `on` would be: it gets the current datum, index, and all the groups,
 and the `this` context is set to the current element.
+
+##### ╭╮☲☲☲╭╮ #####
