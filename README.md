@@ -340,29 +340,41 @@ method chaining style.
 
 <a href="#selection_provide" name="selection_provide">#</a> <i>selection</i>.<b>provide</b>(<i>store</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/provide.js">&lt;&gt;</a>
 
-Provides the Redux *store* to nested components.
+Provides the Redux *store* to this node and any nested nodes.  You can
+access the state and dispatch of this store by calling the various
+other methods.
 
 <a href="#selection_dataFromState" name="selection_dataFromState">#</a> <i>selection</i>.<b>dataFromState</b>(<i>selector</i>[, <i>key</i>]) <a href="https://github.com/couchand/d3-redux/blob/master/src/dataFromState.js">&lt;&gt;</a>
 
 Calls the *selector*, passing in the current state from the previously-
 provided store, and forwards the result (as well as the *key*, if
-provided) to [`selection.data()`](https://github.com/d3/d3-selection#selection_data).
-Computes a data join.  _Note:_ this is a "selector" in the Redux and 
-[reselect](https://github.com/reactjs/reselect) sense, not in the D3
-one - it is a unary function of the store's state.
+provided) to [*selection*.data](https://github.com/d3/d3-selection#selection_data).
+Computes a data join.  _Note:_ the parameter is a "selector" in the
+Redux and  [reselect](https://github.com/reactjs/reselect) sense, not
+in the D3 one - it is a unary function of the store's state.
+
+The *selector* is passed the current state, and in case it is needed,
+the `this` context is set to the current node.
 
 <a href="#selection_datumFromState" name="selection_datumFromState">#</a> <i>selection</i>.<b>datumFromState</b>(<i>selector</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/datumFromState.js">&lt;&gt;</a>
 
 Calls the *selector*, passing in the current state from the previously-
 provided store, and forwards the result to
-[`selection.datum()`](https://github.com/d3/d3-selection#selection_datum).
-Does not computes a data join.  _Note:_ this is a "selector" in the
-Redux and [reselect](https://github.com/reactjs/reselect) sense, not
-in the D3 one - it is a unary function of the store's state.
+[*selection*.datum](https://github.com/d3/d3-selection#selection_datum).
+Does not compute a data join.  _Note:_ the parameter is a "selector" in
+the Redux and [reselect](https://github.com/reactjs/reselect) sense,
+not in the D3 one - it is a unary function of the store's state.
+
+The *selector* is passed the current state, and in case it is needed,
+the `this` context is set to the current node.
 
 <a href="#selection_dispatchOn" name="selection_dispatchOn">#</a> <i>selection</i>.<b>dispatchOn</b>(<i>typenames</i>, <i>actionCreator</i>[, <i>capture</i>]) <a href="https://github.com/couchand/d3-redux/blob/master/src/dispatchOn.js">&lt;&gt;</a>
 
 Attaches an event listener for the given *typenames* using
-[`selection.on()`](https://github.com/d3/d3-selection#selection_on).
-The return value of *actionCreator* is forwarded on to dispatch from
-the previously-provided store.
+[*selection*.on](https://github.com/d3/d3-selection#selection_on).
+If it is truty, the return value of *actionCreator* is forwarded on to
+the dispatch method of the previously-provided store.
+
+The *actionCreator* is called in the same way that a handler passed to
+`on` would be: it gets the current datum, index, and all the groups,
+and the `this` context is set to the current element.
