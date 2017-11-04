@@ -1,5 +1,7 @@
 import storeLocal from './local';
 
 export default function (store) {
-  return this.property(storeLocal, store);
+  return function (selection) {
+    selection.property(storeLocal, store);
+  }
 }

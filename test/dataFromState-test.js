@@ -2,7 +2,7 @@ var tape = require('tape');
 var jsdom = require('./jsdom');
 var d3 = require('d3-selection');
 
-require('../');
+var me = require('../');
 
 function storeOf(state) {
   return {
@@ -14,9 +14,9 @@ tape('selection.dataFromState(selector) gets state from the provided store', fun
   var state = { foo: [0, 1, 2] };
   var document = jsdom('');
   var sel = d3.select(document.body)
-    .provide(storeOf(state))
+    .call(me.provide(storeOf(state)))
     .selectAll('div')
-    .dataFromState(function (d) { return d.foo; })
+    .data(me.fromState(function (d) { return d.foo; }))
     .enter().append('div');
   test.equal(sel.size(), state.foo.length);
   sel.each(function (d, i) { test.equal(d, i) });
@@ -24,14 +24,14 @@ tape('selection.dataFromState(selector) gets state from the provided store', fun
 });
 
 tape('selection.dataFromState(selector) calls the selector in the context of the selected element', function (test) {
-  var me;
+  var result;
   var document = jsdom('<div></div>');
   var el = document.querySelector('div');
   d3.select(el)
-    .provide(storeOf([]))
+    .call(me.provide(storeOf([])))
     .selectAll('.child')
-    .dataFromState(function () { me = this; return []; });
-  test.equal(me, el);
+    .data(me.fromState(function () { result = this; return []; }));
+  test.equal(result, el);
   test.end();
 });
 
@@ -41,9 +41,9 @@ tape('selection.data(selector, key) joins data to element using the computed key
     two = body.querySelector('#two'),
     three = body.querySelector('#three'),
     selection = d3.select(body)
-      .provide(storeOf({}))
+      .call(me.provide(storeOf({})))
       .selectAll('node')
-      .dataFromState(function () { return ['one', 'four', 'three']; }, function(d) { return d || this.id; });
+      .data(me.fromState(function () { return ['one', 'four', 'three']; }), function(d) { return d || this.id; });
   test.deepEqual(selection, {
     _groups: [[one,, three]],
     _parents: [body],

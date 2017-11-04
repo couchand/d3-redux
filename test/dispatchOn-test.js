@@ -2,7 +2,7 @@ var tape = require('tape');
 var jsdom = require('./jsdom');
 var d3 = require('d3-selection');
 
-require('../');
+var me = require('../');
 
 tape('selection.dispatchOn(type, listener) dispatches on event', function(test) {
   var document = jsdom('<div></div>');
@@ -12,9 +12,9 @@ tape('selection.dispatchOn(type, listener) dispatches on event', function(test) 
     dispatch: function (action) { actions.push(action);}
   };
   var sel = d3.select(document.body)
-    .provide(store)
+    .call(me.provide(store))
     .select('div')
-    .dispatchOn('click', function () { return 42; });
+    .on('click', me.dispatch(function () { return 42; }));
   sel.dispatch('click');
 
   test.deepEqual(actions, [42]);
@@ -26,7 +26,7 @@ tape('selection.dispatchOn(type, listener, capture) passes along the capture fla
   var sel = d3.select({
     addEventListener: function(type, listener, capture) { result = capture; }
   });
-  test.equal(sel.dispatchOn("click", function() {}, true), sel);
+  test.equal(sel.on("click", me.dispatch(function() {}), true), sel);
   test.equal(result, true);
   test.end();
 });
@@ -41,11 +41,11 @@ tape('selection.dispatchOn(type, listener) passes the listener data, index and g
     results = [];
 
   var selection = d3.selectAll([one, two])
-    .provide({ dispatch: function () {} })
+    .call(me.provide({ dispatch: function () {} }))
     .datum(function(d, i) { return 'parent-' + i; })
     .selectAll('child')
     .data(function(d, i) { return [0, 1].map(function(j) { return 'child-' + i + '-' + j; }); })
-    .dispatchOn('foo', function(d, i, nodes) { results.push([this, d, i, nodes]); });
+    .on('foo', me.dispatch(function(d, i, nodes) { results.push([this, d, i, nodes]); }));
 
   test.deepEqual(results, []);
   selection.dispatch('foo');
