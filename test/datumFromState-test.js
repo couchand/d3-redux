@@ -2,7 +2,7 @@ var tape = require('tape');
 var jsdom = require('./jsdom');
 var d3 = require('d3-selection');
 
-require('../');
+var me = require('../');
 
 function storeOf(state) {
   return {
@@ -14,21 +14,21 @@ tape('selection.datumFromState(selector) gets state from the provided store', fu
   var state = { foo: {} };
   var document = jsdom('<div></div>');
   var sel = d3.select(document.body)
-    .provide(storeOf(state))
+    .call(me.provide(storeOf(state)))
     .select('div')
-    .datumFromState(function (d) { return d.foo; });
+    .datum(me.fromState(function (d) { return d.foo; }));
   test.equal(sel.datum(), state.foo);
   test.end();
 });
 
 tape('selection.datumFromState(selector) calls the selector in the context of the selected element', function (test) {
-  var me;
+  var result;
   var document = jsdom('<div></div>');
   var el = document.querySelector('div');
   d3.select(document.body)
-    .provide(storeOf({}))
+    .call(me.provide(storeOf({})))
     .select('div')
-    .datumFromState(function () { me = this; });
-  test.equal(me, el);
+    .datum(me.fromState(function () { result = this; }));
+  test.equal(result, el);
   test.end();
 });

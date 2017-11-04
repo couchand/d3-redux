@@ -1,12 +1,11 @@
-import { selection } from "d3-selection";
 import provide from "./src/provide";
 import connect from "./src/connect";
-import dataFromState from "./src/dataFromState";
-import datumFromState from "./src/datumFromState";
-import dispatchOn from "./src/dispatchOn";
+import fromState from "./src/fromState";
+import dispatch from "./src/dispatch";
 
-selection.prototype.provide = provide;
-selection.prototype.connect = connect;
-selection.prototype.dataFromState = dataFromState;
-selection.prototype.datumFromState = datumFromState;
-selection.prototype.dispatchOn = dispatchOn;
+export default {
+  provide,
+  connect,
+  fromState,
+  dispatch
+};
