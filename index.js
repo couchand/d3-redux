@@ -1,11 +1,4 @@
-import provide from "./src/provide";
-import connect from "./src/connect";
-import fromState from "./src/fromState";
-import dispatch from "./src/dispatch";
-
-export default {
-  provide,
-  connect,
-  fromState,
-  dispatch
-};
+export { default as reduxProvide } from "./src/provide";
+export { default as reduxConnect } from "./src/connect";
+export { default as reduxFromState } from "./src/fromState";
+export { default as reduxDispatch } from "./src/dispatch";

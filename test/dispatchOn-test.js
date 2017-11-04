@@ -3,6 +3,8 @@ var jsdom = require('./jsdom');
 var d3 = require('d3-selection');
 
 var me = require('../');
+var provide = me.reduxProvide;
+var dispatch = me.reduxDispatch;
 
 tape('selection.dispatchOn(type, listener) dispatches on event', function(test) {
   var document = jsdom('<div></div>');
@@ -12,9 +14,9 @@ tape('selection.dispatchOn(type, listener) dispatches on event', function(test) 
     dispatch: function (action) { actions.push(action);}
   };
   var sel = d3.select(document.body)
-    .call(me.provide(store))
+    .call(provide(store))
     .select('div')
-    .on('click', me.dispatch(function () { return 42; }));
+    .on('click', dispatch(function () { return 42; }));
   sel.dispatch('click');
 
   test.deepEqual(actions, [42]);
@@ -26,7 +28,7 @@ tape('selection.dispatchOn(type, listener, capture) passes along the capture fla
   var sel = d3.select({
     addEventListener: function(type, listener, capture) { result = capture; }
   });
-  test.equal(sel.on("click", me.dispatch(function() {}), true), sel);
+  test.equal(sel.on("click", dispatch(function() {}), true), sel);
   test.equal(result, true);
   test.end();
 });
@@ -41,11 +43,11 @@ tape('selection.dispatchOn(type, listener) passes the listener data, index and g
     results = [];
 
   var selection = d3.selectAll([one, two])
-    .call(me.provide({ dispatch: function () {} }))
+    .call(provide({ dispatch: function () {} }))
     .datum(function(d, i) { return 'parent-' + i; })
     .selectAll('child')
     .data(function(d, i) { return [0, 1].map(function(j) { return 'child-' + i + '-' + j; }); })
-    .on('foo', me.dispatch(function(d, i, nodes) { results.push([this, d, i, nodes]); }));
+    .on('foo', dispatch(function(d, i, nodes) { results.push([this, d, i, nodes]); }));
 
   test.deepEqual(results, []);
   selection.dispatch('foo');

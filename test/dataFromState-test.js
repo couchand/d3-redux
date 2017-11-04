@@ -3,6 +3,8 @@ var jsdom = require('./jsdom');
 var d3 = require('d3-selection');
 
 var me = require('../');
+var provide = me.reduxProvide;
+var fromState = me.reduxFromState;
 
 function storeOf(state) {
   return {
@@ -14,9 +16,9 @@ tape('selection.dataFromState(selector) gets state from the provided store', fun
   var state = { foo: [0, 1, 2] };
   var document = jsdom('');
   var sel = d3.select(document.body)
-    .call(me.provide(storeOf(state)))
+    .call(provide(storeOf(state)))
     .selectAll('div')
-    .data(me.fromState(function (d) { return d.foo; }))
+    .data(fromState(function (d) { return d.foo; }))
     .enter().append('div');
   test.equal(sel.size(), state.foo.length);
   sel.each(function (d, i) { test.equal(d, i) });
@@ -28,9 +30,9 @@ tape('selection.dataFromState(selector) calls the selector in the context of the
   var document = jsdom('<div></div>');
   var el = document.querySelector('div');
   d3.select(el)
-    .call(me.provide(storeOf([])))
+    .call(provide(storeOf([])))
     .selectAll('.child')
-    .data(me.fromState(function () { result = this; return []; }));
+    .data(fromState(function () { result = this; return []; }));
   test.equal(result, el);
   test.end();
 });
@@ -41,9 +43,9 @@ tape('selection.data(selector, key) joins data to element using the computed key
     two = body.querySelector('#two'),
     three = body.querySelector('#three'),
     selection = d3.select(body)
-      .call(me.provide(storeOf({})))
+      .call(provide(storeOf({})))
       .selectAll('node')
-      .data(me.fromState(function () { return ['one', 'four', 'three']; }), function(d) { return d || this.id; });
+      .data(fromState(function () { return ['one', 'four', 'three']; }), function(d) { return d || this.id; });
   test.deepEqual(selection, {
     _groups: [[one,, three]],
     _parents: [body],

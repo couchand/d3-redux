@@ -3,6 +3,8 @@ var jsdom = require('./jsdom');
 var d3 = require('d3-selection');
 
 var me = require('../');
+var provide = me.reduxProvide;
+var fromState = me.reduxFromState;
 
 function storeOf(state) {
   return {
@@ -14,9 +16,9 @@ tape('selection.datumFromState(selector) gets state from the provided store', fu
   var state = { foo: {} };
   var document = jsdom('<div></div>');
   var sel = d3.select(document.body)
-    .call(me.provide(storeOf(state)))
+    .call(provide(storeOf(state)))
     .select('div')
-    .datum(me.fromState(function (d) { return d.foo; }));
+    .datum(fromState(function (d) { return d.foo; }));
   test.equal(sel.datum(), state.foo);
   test.end();
 });
@@ -26,9 +28,9 @@ tape('selection.datumFromState(selector) calls the selector in the context of th
   var document = jsdom('<div></div>');
   var el = document.querySelector('div');
   d3.select(document.body)
-    .call(me.provide(storeOf({})))
+    .call(provide(storeOf({})))
     .select('div')
-    .datum(me.fromState(function () { result = this; }));
+    .datum(fromState(function () { result = this; }));
   test.equal(result, el);
   test.end();
 });
