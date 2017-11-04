@@ -3,6 +3,8 @@ var jsdom = require('./jsdom');
 var d3 = require('d3-selection');
 
 var me = require('../');
+var provide = me.reduxProvide;
+var connect = me.reduxConnect;
 
 tape('selection.connect(function) calls the specified function immediately', function (test) {
   var result;
@@ -12,10 +14,10 @@ tape('selection.connect(function) calls the specified function immediately', fun
   };
   var document = jsdom('<div/><div/><div/>');
   var selection = d3.select(document.body)
-    .call(me.provide(store))
+    .call(provide(store))
     .selectAll('div');
 
-  test.equal(selection.call(me.connect(function(sel) { result = sel; })), selection);
+  test.equal(selection.call(connect(function(sel) { result = sel; })), selection);
   test.equal(result, selection);
   test.end();
 });
@@ -30,10 +32,10 @@ tape('selection.connect(function, arguments…) calls the specified function, pa
   };
   var document = jsdom('<div/><div/><div/>');
   var selection = d3.select(document.body)
-    .call(me.provide(store))
+    .call(provide(store))
     .selectAll('div');
 
-  test.equal(selection.call(me.connect(function (sel, a, b) { result.push(sel, a, b); }), foo, bar), selection);
+  test.equal(selection.call(connect(function (sel, a, b) { result.push(sel, a, b); }), foo, bar), selection);
   test.deepEqual(result, [selection, foo, bar]);
   test.end();
 });
@@ -46,10 +48,10 @@ tape('selection.connect(function) subscribes to the store', function (test) {
   };
   var document = jsdom('<div/><div/><div/>');
   var selection = d3.select(document.body)
-    .call(me.provide(store))
+    .call(provide(store))
     .selectAll('div');
 
-  test.equal(selection.call(me.connect(function () {})), selection);
+  test.equal(selection.call(connect(function () {})), selection);
   test.equal(subscribers.length, 1);
   test.end();
 });
@@ -64,10 +66,10 @@ tape('selection.connect(function) calls the specified function when the store up
   };
   var document = jsdom('<div/><div/><div/>');
   var selection = d3.select(document.body)
-    .call(me.provide(store))
+    .call(provide(store))
     .selectAll('div');
 
-  test.equal(selection.call(me.connect(function (sel) { result = sel; })), selection);
+  test.equal(selection.call(connect(function (sel) { result = sel; })), selection);
 
   test.equal(subscribers.length, 1);
   var subscriber = subscribers[0];
@@ -92,10 +94,10 @@ tape('selection.connect(function) does not call the specified function if the su
   };
   var document = jsdom('<div/><div/><div/>');
   var selection = d3.select(document.body)
-    .call(me.provide(store))
+    .call(provide(store))
     .selectAll('div');
 
-  test.equal(selection.call(me.connect(function (sel) { result = sel; })), selection);
+  test.equal(selection.call(connect(function (sel) { result = sel; })), selection);
 
   test.equal(subscribers.length, 1);
   var subscriber = subscribers[0];
@@ -124,15 +126,15 @@ tape('selection.connect(function) for selections with multiple stores subscribes
   var document = jsdom('<div id="a"><a/><a/><a/></div><div id="b"><a/><a/><a/></div>');
   d3.select(document.body)
     .select("#a")
-    .call(me.provide(storeA));
+    .call(provide(storeA));
   d3.select(document.body)
     .select("#b")
-    .call(me.provide(storeB));
+    .call(provide(storeB));
   var selection = d3.select(document.body)
     .selectAll('div')
     .selectAll('a');
 
-  test.equal(selection.call(me.connect(function () {})), selection);
+  test.equal(selection.call(connect(function () {})), selection);
   test.equal(subscribersA.length, 1);
   test.equal(subscribersB.length, 1);
   test.end();
@@ -151,15 +153,15 @@ tape('selection.connect(function) for selections with multiple stores calls the 
   var document = jsdom('<div id="a"><a/><a/><a/></div><div id="b"><a/><a/><a/></div>');
   d3.select(document.body)
     .select("#a")
-    .call(me.provide(storeA));
+    .call(provide(storeA));
   d3.select(document.body)
     .select("#b")
-    .call(me.provide(storeB));
+    .call(provide(storeB));
   var selection = d3.select(document.body)
     .selectAll('div')
     .selectAll('a');
 
-  test.equal(selection.call(me.connect(function (sel) { results.push(sel); })), selection);
+  test.equal(selection.call(connect(function (sel) { results.push(sel); })), selection);
   test.deepEqual(results, [selection]);
   test.end();
 });
