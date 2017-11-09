@@ -2,7 +2,7 @@
 
 Idiomatic D3.js bindings for Redux.
 
-[![Build Status](https://travis-ci.org/couchand/d3-redux.svg?branch=master)](https://travis-ci.org/couchand/d3-redux)
+[![Build Status](https://travis-ci.org/couchand/d3-redux.svg?branch=master)](https://travis-ci.org/couchand/d3-redux) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 
 [Redux](https://github.com/reactjs/redux) offers a simple yet powerful
 state management solution, but it's not immediately obvious how to

@@ -17,12 +17,14 @@
   },
   "scripts": {
     "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -g d3-selection:d3 -o build/d3-redux.js -- index.js",
-    "test": "tape 'test/**/*-test.js'",
+    "format": "prettier --write index.js src/**/*.js",
+    "test": "prettier --list-different index.js src/**/*.js test/**/*.js && tape 'test/**/*-test.js'",
     "prepublish": "npm run test && uglifyjs build/d3-redux.js -c -m -o build/d3-redux.min.js",
     "postpublish": "zip -j build/d3-redux.zip -- LICENSE README.md build/d3-redux.js build/d3-redux.min.js"
   },
   "devDependencies": {
     "jsdom": "11",
+    "prettier": "1.8.1",
     "rollup": "0.27",
     "tape": "4",
     "uglify-js": "2"

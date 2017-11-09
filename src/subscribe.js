@@ -1,4 +1,4 @@
-export default function (store, callback, args) {
+export default function(store, callback, args) {
   var currentState = store.getState();
   function handleUpdate() {
     var nextState = store.getState();
