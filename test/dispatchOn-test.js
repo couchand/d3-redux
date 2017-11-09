@@ -23,16 +23,6 @@ tape('selection.dispatchOn(type, listener) dispatches on event', function(test) 
   test.end();
 });
 
-tape('selection.dispatchOn(type, listener, capture) passes along the capture flag', function (test) {
-  var result;
-  var sel = d3.select({
-    addEventListener: function(type, listener, capture) { result = capture; }
-  });
-  test.equal(sel.on("click", dispatch(function() {}), true), sel);
-  test.equal(result, true);
-  test.end();
-});
-
 tape('selection.dispatchOn(type, listener) passes the listener data, index and group', function(test) {
   var document = jsdom('<parent id="one"><child id="three"></child><child id="four"></child></parent><parent id="two"><child id="five"></child></parent>'),
     one = document.querySelector('#one'),
