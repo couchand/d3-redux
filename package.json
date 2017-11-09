@@ -18,12 +18,15 @@
   "scripts": {
     "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -g d3-selection:d3 -o build/d3-redux.js -- index.js",
     "format": "prettier --write index.js src/**/*.js",
-    "test": "prettier --list-different index.js src/**/*.js test/**/*.js && tape 'test/**/*-test.js'",
+    "test": "prettier --list-different index.js src/**/*.js test/**/*.js && nyc tape 'test/**/*-test.js'",
+    "testci": "npm run test && nyc report --reporter=text-lcov | coveralls",
     "prepublish": "npm run test && uglifyjs build/d3-redux.js -c -m -o build/d3-redux.min.js",
     "postpublish": "zip -j build/d3-redux.zip -- LICENSE README.md build/d3-redux.js build/d3-redux.min.js"
   },
   "devDependencies": {
+    "coveralls": "^3.0.0",
     "jsdom": "11",
+    "nyc": "^11.3.0",
     "prettier": "1.8.1",
     "rollup": "0.27",
     "tape": "4",
