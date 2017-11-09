@@ -2,6 +2,8 @@
 
 Idiomatic D3.js bindings for Redux.
 
+[![Build Status](https://travis-ci.org/couchand/d3-redux.svg?branch=master)](https://travis-ci.org/couchand/d3-redux)
+
 [Redux](https://github.com/reactjs/redux) offers a simple yet powerful
 state management solution, but it's not immediately obvious how to
 idiomatically make use of it from a complex [D3](https://d3js.org/)
