@@ -22,7 +22,7 @@
     "minify": "uglifyjs build/d3-redux.js -c -m -o build/d3-redux.min.js",
     "format": "prettier --write index.js src/**/*.js test/**/*.js",
     "lint": "prettier --list-different index.js src/**/*.js test/**/*.js",
-    "pretest": "npm run lint && npm run rollup",
+    "pretest": "npm run lint && rollup -c rollup.test.js",
     "test": "nyc tape 'test/**/*-test.js'",
     "coverage": "nyc report --reporter=text-lcov | coveralls",
     "prepublish": "npm run test && npm run minify",

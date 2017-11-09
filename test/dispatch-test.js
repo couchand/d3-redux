@@ -2,7 +2,7 @@ var tape = require('tape');
 var jsdom = require('./jsdom');
 var d3 = require('d3-selection');
 
-var me = require('../');
+var me = require('../build/d3-redux.test');
 var provide = me.reduxProvide;
 var dispatch = me.reduxDispatch;
 
