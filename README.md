@@ -2,7 +2,7 @@
 
 Idiomatic D3.js bindings for Redux.
 
-[![Build Status](https://travis-ci.org/couchand/d3-redux.svg?branch=master)](https://travis-ci.org/couchand/d3-redux) [![Coverage Status](https://coveralls.io/repos/github/couchand/d3-redux/badge.svg?branch=master)](https://coveralls.io/github/couchand/d3-redux?branch=master) [![license: MIT License](https://img.shields.io/github/license/couchand/d3-redux.svg)](https://github.com/couchand/d3-redux/blob/master/LICENSE) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
+[![npm](https://img.shields.io/npm/v/d3-redux.svg)](https://www.npmjs.com/package/d3-redux) [![Build Status](https://travis-ci.org/couchand/d3-redux.svg?branch=master)](https://travis-ci.org/couchand/d3-redux) [![Coverage Status](https://img.shields.io/coveralls/github/couchand/d3-redux.svg)](https://coveralls.io/github/couchand/d3-redux?branch=master) [![license: MIT License](https://img.shields.io/github/license/couchand/d3-redux.svg)](https://github.com/couchand/d3-redux/blob/master/LICENSE) [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg?style=flat)](https://github.com/prettier/prettier)
 
 [Redux](https://github.com/reactjs/redux) offers a simple yet powerful
 state management solution, but it's not immediately obvious how to
