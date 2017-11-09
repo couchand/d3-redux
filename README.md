@@ -21,7 +21,7 @@ const initialState = {
 const store = Redux.createStore(rootReducer, initialState);
 
 const app = d3.select("#app")
-  .provide(store);
+  .call(d3.reduxProvide(store));
 ```
 
 Then in some nested component make use of the store's state, just as
@@ -30,7 +30,7 @@ you would any other data join:
 ```js
 let todos = main.select("ul")
   .selectAll("li")
-  .dataFromState(state => state.todos);
+  .data(d3.reduxFromState(state => state.todos));
 
 todos = todos.enter()
   .append("li")
@@ -40,23 +40,23 @@ todos = todos.enter()
 Finally, attach handlers that will dispatch actions back to the store:
 
 ```js
-const destroyTodo = id => ({ type: "DESTROY", payload: { id } });
+const destroyTodo = ({ id }) => ({ type: "DESTROY", payload: { id } });
 
-trashCan.dispatchOn("click", d => destroyTodo(d.id));
+trashCan.on("click", d3.reduxDispatch(destroyTodo));
 ```
 
 ## Table of Contents
 
 - [Installing](#installing)
-- [Getting Started](#getting-Started)
+- [Getting Started](#getting-started)
   - [Coming from Redux](#coming-from-redux)
   - [Coming from D3](#coming-from-d3)
+- [Usage Notes](#usage-notes)
 - [API Reference](#api-reference)
-  - [*selection*.provide](#selection_provide)
-  - [*selection*.connect](#selection_connect)
-  - [*selection*.dataFromState](#selection_dataFromState)
-  - [*selection*.datumFromState](#selection_datumFromState)
-  - [*selection*.dispatchOn](#selection_dispatchOn)
+  - [d3.reduxProvide](#reduxProvide)
+  - [d3.reduxConnect](#reduxConnect)
+  - [d3.reduxFromState](#reduxFromState)
+  - [d3.reduxDispatch](#reduxDispatch)
 
 ## Installing
 
@@ -118,7 +118,7 @@ react-redux we would wrap our app in a `<Provider />`.  With **d3-redux**
 we can also "provide" it to child nodes:
 
 ```js
-myApp.provide(store);
+myApp.call(d3.reduxProvide(store));
 ```
 
 Idiomatic D3 code relies heavily on method chaining (it uses a "fluent"
@@ -127,7 +127,7 @@ return the current one.  That means we can do the above in one go:
 
 ```js
 const myApp = d3.select("#my-app")
-  .provide(store);
+  .call(d3.reduxProvide(store));
 ```
 
 We'll go ahead and create a list in our app:
@@ -189,7 +189,7 @@ on it, we can make a simple change to the above code:
 -    { title: "Learn Redux", completed: true },
 -    { title: "Leard D3", completed: false }
 -  ]);
-+  .dataFromState(state => state.todos);
++  .data(d3.reduxFromState(state => state.todos));
 ```
 
 Of course, for a complete Redux application we also need to be able to
@@ -203,7 +203,7 @@ our todo creation to attach a handler that dispatches that action:
    .attr("class", "edit")
 -  .attr("type", "text");
 +  .attr("type", "text")
-+  .dispatchOn("change", d => updateTodo(d.id, this.value));
++  .on("change", d3.reduxDispatch(d => updateTodo(d.id, this.value)));
 ```
 
 Now we've handled the initial render, but how do we respond to state
@@ -223,15 +223,15 @@ the selection as the only paramter, and then use the method `call`:
 +  });
 ```
 
-Using **d3-redux**, we can change the call to connect, and our component
+Using **d3-redux**, we can wrap the call in connect, and our component
 will update any time the state changes:
 
 ```diff
  myApp.append("ul")
 -  .call(function (todoList) {
-+  .connect(function (todoList) {
++  .call(d3.reduxConnect(function (todoList) {
      // data join code here...
-    });
+    }));
 ```
 
 That's it!  We've built the D3 side of a simple **d3-redux** app.
@@ -315,17 +315,17 @@ selection, and we'll use the method `provide` to bind the store to it:
 
 ```js
 const app = d3.select("#my-app")
-  .provide(store);
+  .call(d3.reduxProvide(store));
 
 const todoList = app.append("ul");
 ```
 
-Now, instead of calling `data` to manually bind our todo list, we'll
-use `dataFromStore` to grab the todos from the right place:
+Now, instead of manually binding our todo list in the call to `data`,
+we'll use `fromStore` to grab the todos from the right place:
 
 ```js
 const todoJoin = todoList.selectAll("li")
-  .dataFromStore(store => store.todos);
+  .data(d3.reduxFromStore(store => store.todos));
 
 const todoEnter = todoJoin.enter()
   .append("li");
@@ -341,15 +341,15 @@ todos.select(".edit")
 ```
 
 The last step is dispatching actions in response to user interaction.
-Instead of just using `on`, we'll use `dispatchOn`, which automatically
-dispatches the result to the provided store:
+Instead of just using `on`, we'll wrap the handler with `dispatch`,
+which automatically dispatches the result to the provided store:
 
 ```diff
  todoEnter.append("input")
    .attr("class", "edit")
 -  .attr("type", "text");
 +  .attr("type", "text")
-+  .dispatchOn("change", function (d) {
++  .on("change", d3.reduxDispatch(function (d) {
 +    return {
 +      type: "UPDATE_TODO",
 +      payload: {
@@ -357,7 +357,7 @@ dispatches the result to the provided store:
 +        title: this.value
 +      }
 +    };
-+  });
++  }));
 ```
 
 Now, assuming our reducer can handle this action type appropriately,
@@ -368,8 +368,8 @@ updates.  A store offers the method `subscribe`, which allows us to
 listen for updates and respond to them.  We could just subscribe with
 our whole application, but there's a better way.  Much the same as
 `call` allows us to encapsulate a component's D3 logic, **d3-redux**
-has a method `connect`, which is like call, but will rerender when the
-state changes.
+has a method `connect`, which we wrap our component in before the call,
+and it will automatically rerender when the state changes.
 
 If we first encapsulated the todo data join in a `call`, like this:
 
@@ -386,64 +386,102 @@ Using connect to update on state change would just require:
 ```diff
  myApp.append("ul")
 -  .call(function (todoList) {
-+  .connect(function (todoList) {
++  .call(d3.reduxConnect(function (todoList) {
      // data join code here...
-    });
+    }));
 ```
 
-One final note: in addition to `dataFromState`, there's `datumFromState`,
-which provides the corresponding decorated version of D3's `datum`.
-Remember that this just sets the current node's datum without computing
-a data join.
+One final note: the method `fromState` can be used not just for calls
+to `data`, but also for `datum`.  Remember that this just sets the
+current node's datum without computing a data join.
+
+## Usage Notes
+
+You may find your code easier to read if you alias the methods on
+import like this:
+
+```
+import {
+  reduxProvide as provide,
+  reduxConnect as connect,
+  reduxFromState as fromState,
+  reduxDispatch as dispatch
+} from "d3-redux";
+```
+
+Then, combined with judicious naming of selectors and action creators,
+you can write code like this:
+
+```
+d3.select(element)
+  .call(provide(store))
+  .call(connect(function (el) {
+    el.data(fromState(selectTodoList));
+    // ...
+    trash.on("click", dispatch(deleteTodo));
+  }));
+```
 
 ## API Reference
 
 All methods return the current selection, to facilitate D3's idiomatic
 method chaining style.
 
-<a href="#selection_provide" name="selection_provide">#</a> <i>selection</i>.<b>provide</b>(<i>store</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/provide.js">&lt;&gt;</a>
+<a href="#reduxProvide" name="reduxProvide">#</a> d3.<b>reduxProvide</b>(<i>store</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/provide.js">&lt;&gt;</a>
+
+Use with *selection*.call:
+
+```
+d3.select(document.body)
+  .call(provide(store));
+```
 
 Provides the Redux *store* to the nodes in this selection as well as
 any nested nodes.  You can then implicitly access the state and
 dispatch of the provided store through the various other methods.
 
-<a href="#selection_connect" name="selection_connect">#</a> <i>selection</i>.<b>connect</b>(<i>function</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/connect.js">&lt;&gt;</a>
+<a href="#reduxConnect" name="reduxConnect">#</a> d3.<b>reduxConnect</b>(<i>function</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/connect.js">&lt;&gt;</a>
+
+Use with *selection*.call:
+
+```
+d3.select("svg")
+  .call(connect(myCoolChart));
+```
 
 Calls the *function*, passing in the current selection.  A call is made
 immediately, and the selection subscribes to the store, calling the
-function again any time the state changes.  This is analogous to
-[*selection*.call](https://github.com/d3/d3-selection#selection_call),
+function again any time the state changes.  This is analogous to a
+vanilla use of [*selection*.call](https://github.com/d3/d3-selection#selection_call),
 but adding a subscription to the provided store.
 
-<a href="#selection_dataFromState" name="selection_dataFromState">#</a> <i>selection</i>.<b>dataFromState</b>(<i>selector</i>[, <i>key</i>]) <a href="https://github.com/couchand/d3-redux/blob/master/src/dataFromState.js">&lt;&gt;</a>
+<a href="#reduxFromState" name="reduxFromState">#</a> d3.<b>reduxFromState</b>(<i>selector</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/fromState.js">&lt;&gt;</a>
+
+Use with *selection*.data or *selection*.datum:
+
+```
+d3.select(".user")
+  .datum(fromState(user))
+
+d3.selectAll("li")
+  .data(fromState(todoItems));
+```
 
 Calls the *selector*, passing in the current state from the provided
-store, and forwards the result (as well as the *key* function, if
-provided) to [*selection*.data](https://github.com/d3/d3-selection#selection_data).
-As with *selection*.data, this method **computes a data join.**  The
-*selector* is passed the current state as the only parameter, with the
-`this` context set to the current node.
-
-_Note:_ the parameter is a "selector" in the Redux and
-[reselect](https://github.com/reactjs/reselect) sense, not in the D3
-and DOM sense - it is simply a unary function of the store's state.
-
-<a href="#selection_datumFromState" name="selection_datumFromState">#</a> <i>selection</i>.<b>datumFromState</b>(<i>selector</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/datumFromState.js">&lt;&gt;</a>
-
-Calls the *selector*, passing in the current state from the provided
-store, and forwards the result to [*selection*.datum](https://github.com/d3/d3-selection#selection_datum).
-As with *selection*.datum, this method **does not compute a data join**.
+store, and returns the result, to be used by the enclosing call to
+[*selection*.data](https://github.com/d3/d3-selection#selection_data) or
+[*selection*.datum](https://github.com/d3/d3-selection#selection_datum).
 The *selector* is passed the current state as the only parameter, with
-the `this` context is set to the current node.
+the `this` context set to the current node.
 
 _Note:_ the parameter is a "selector" in the Redux and
 [reselect](https://github.com/reactjs/reselect) sense, not in the D3
 and DOM sense - it is simply a unary function of the store's state.
 
-<a href="#selection_dispatchOn" name="selection_dispatchOn">#</a> <i>selection</i>.<b>dispatchOn</b>(<i>typenames</i>, <i>actionCreator</i>[, <i>capture</i>]) <a href="https://github.com/couchand/d3-redux/blob/master/src/dispatchOn.js">&lt;&gt;</a>
+<a href="#reduxDispatch" name="reduxDispatch">#</a> d3.<b>reduxDispatch</b>(<i>actionCreator</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/dispatch.js">&lt;&gt;</a>
 
-Attaches an event listener for the given *typenames* using
-[*selection*.on](https://github.com/d3/d3-selection#selection_on).
+Wraps an *actionCreator* into an event listener to be passed on to the
+enclosing call to [*selection*.on](https://github.com/d3/d3-selection#selection_on).
 The *actionCreator* is called in the same way that a handler passed to
 `on` would be: it gets the current datum, index, and all the groups,
 and the `this` context is set to the current element.  If the return
