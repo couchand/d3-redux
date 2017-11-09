@@ -1,0 +1,8 @@
+{
+  "all": true,
+  "include": [
+    "index.js",
+    "src/**/*.js"
+  ],
+  "excludeAfterRemap": false
+}

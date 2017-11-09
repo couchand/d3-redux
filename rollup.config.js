@@ -1,3 +1,8 @@
+import istanbul from 'rollup-plugin-istanbul';
+import NYC from 'nyc';
+
+const istanbul2 = new (new NYC())._instrumenterLib.istanbul();
+
 export default {
   input: "index.js",
   output: {
@@ -8,5 +13,13 @@ export default {
       "d3-selection": "d3"
     },
     sourcemap: true
-  }
+  },
+  plugins: [
+    istanbul({
+      exclude: ['test/**/*.js'],
+      instrumenter: {
+        Instrumenter: istanbul2.createInstrumenter
+      }
+    })
+  ]
 };
