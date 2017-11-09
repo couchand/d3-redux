@@ -18,7 +18,7 @@
   "scripts": {
     "clean": "rm -rf build",
     "prerollup": "npm run clean && mkdir build",
-    "rollup": "rollup -f umd -n d3 -g d3-selection:d3 -o build/d3-redux.js -- index.js",
+    "rollup": "rollup -c",
     "minify": "uglifyjs build/d3-redux.js -c -m -o build/d3-redux.min.js",
     "format": "prettier --write index.js src/**/*.js test/**/*.js",
     "lint": "prettier --list-different index.js src/**/*.js test/**/*.js",
@@ -33,7 +33,7 @@
     "jsdom": "11",
     "nyc": "^11.3.0",
     "prettier": "1.8.1",
-    "rollup": "0.27",
+    "rollup": "0.50",
     "tape": "4",
     "uglify-js": "2"
   },
