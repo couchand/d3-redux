@@ -1,4 +1,4 @@
-# d3-redux
+# :bar_chart::floppy_disk: d3-redux
 
 Idiomatic D3.js bindings for Redux.
 
