@@ -16,11 +16,17 @@
     "url": "https://github.com/couchand/d3-redux.git"
   },
   "scripts": {
-    "pretest": "rm -rf build && mkdir build && rollup -f umd -n d3 -g d3-selection:d3 -o build/d3-redux.js -- index.js",
-    "format": "prettier --write index.js src/**/*.js",
-    "test": "prettier --list-different index.js src/**/*.js test/**/*.js && nyc tape 'test/**/*-test.js'",
-    "testci": "npm run test && nyc report --reporter=text-lcov | coveralls",
-    "prepublish": "npm run test && uglifyjs build/d3-redux.js -c -m -o build/d3-redux.min.js",
+    "clean": "rm -rf build",
+    "prerollup": "npm run clean && mkdir build",
+    "rollup": "rollup -f umd -n d3 -g d3-selection:d3 -o build/d3-redux.js -- index.js",
+    "minify": "uglifyjs build/d3-redux.js -c -m -o build/d3-redux.min.js",
+    "format": "prettier --write index.js src/**/*.js test/**/*.js",
+    "lint": "prettier --list-different index.js src/**/*.js test/**/*.js",
+    "pretest": "npm run lint && npm run rollup",
+    "test": "nyc tape 'test/**/*-test.js'",
+    "testci": "npm run test",
+    "posttestci": "nyc report --reporter=text-lcov | coveralls",
+    "prepublish": "npm run test && npm run minify",
     "postpublish": "zip -j build/d3-redux.zip -- LICENSE README.md build/d3-redux.js build/d3-redux.min.js"
   },
   "devDependencies": {
