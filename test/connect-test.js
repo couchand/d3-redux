@@ -6,7 +6,7 @@ var me = require('../');
 var provide = me.reduxProvide;
 var connect = me.reduxConnect;
 
-tape('selection.connect(function) calls the specified function immediately', function (test) {
+tape('selection.call(connect(function)) calls the specified function immediately', function (test) {
   var result;
   var store = {
     getState: function () { return 42; },
@@ -22,7 +22,7 @@ tape('selection.connect(function) calls the specified function immediately', fun
   test.end();
 });
 
-tape('selection.connect(function, arguments…) calls the specified function, passing additional arguments', function (test) {
+tape('selection.call(connect(function, arguments…)) calls the specified function, passing additional arguments', function (test) {
   var result = [];
   var foo = {};
   var bar = {};
@@ -40,7 +40,7 @@ tape('selection.connect(function, arguments…) calls the specified function, pa
   test.end();
 });
 
-tape('selection.connect(function) subscribes to the store', function (test) {
+tape('selection.call(connect(function)) subscribes to the store', function (test) {
   var subscribers = [];
   var store = {
     getState: function () { return 42; },
@@ -56,7 +56,7 @@ tape('selection.connect(function) subscribes to the store', function (test) {
   test.end();
 });
 
-tape('selection.connect(function) calls the specified function when the store updates', function (test) {
+tape('selection.call(connect(function)) calls the specified function when the store updates', function (test) {
   var result;
   var state = 42;
   var subscribers = [];
@@ -85,7 +85,7 @@ tape('selection.connect(function) calls the specified function when the store up
   test.end();
 });
 
-tape('selection.connect(function) does not call the specified function if the subscriber is called without a change', function (test) {
+tape('selection.call(connect(function)) does not call the specified function if the subscriber is called without a change', function (test) {
   var result;
   var subscribers = [];
   var store = {
@@ -112,7 +112,7 @@ tape('selection.connect(function) does not call the specified function if the su
   test.end();
 });
 
-tape('selection.connect(function) for selections with multiple stores subscribes to each', function (test) {
+tape('selection.call(connect(function)) for selections with multiple stores subscribes to each', function (test) {
   var subscribersA = [];
   var storeA = {
     getState: function () { return 42; },
@@ -140,7 +140,7 @@ tape('selection.connect(function) for selections with multiple stores subscribes
   test.end();
 });
 
-tape('selection.connect(function) for selections with multiple stores calls the function exactly once immediately', function (test) {
+tape('selection.call(connect(function)) for selections with multiple stores calls the function exactly once immediately', function (test) {
   var results = [];
   var storeA = {
     getState: function () { return 42; },
