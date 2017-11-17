@@ -468,9 +468,10 @@ d3.selectAll("li")
 ```
 
 Calls the *selector*, passing in the current state from the provided
-store, and returns the result, to be used by the enclosing call to
-[*selection*.data](https://github.com/d3/d3-selection#selection_data) or
-[*selection*.datum](https://github.com/d3/d3-selection#selection_datum).
+store, the current datum (*d*), the current index (*i*), and the parent
+group (*nodes*).  Returns the result, to be used by the enclosing call
+to [*selection*.data](https://github.com/d3/d3-selection#selection_data)
+or [*selection*.datum](https://github.com/d3/d3-selection#selection_datum).
 The *selector* is passed the current state as the only parameter, with
 the `this` context set to the current node.
 
