@@ -1,6 +1,7 @@
 var tape = require('tape');
 var jsdom = require('./jsdom');
 var d3 = require('d3-selection');
+require('d3-transition');
 
 var me = require('../build/d3-redux.test');
 var provide = me.reduxProvide;
@@ -76,5 +77,36 @@ tape(
       [five, 'child-1-0', 0, [five]]
     ]);
     test.end();
+  }
+);
+
+tape(
+  'transition.on(type, dispatch(actionCreator)) dispatches on event',
+  function(test) {
+    var document = jsdom();
+    var actions = [];
+    var sel = d3
+      .select(document.body)
+      .call(
+        provide({
+          dispatch: function(action) {
+            actions.push(action);
+          }
+        })
+      )
+      .transition()
+      .duration(10)
+      .on(
+        'start',
+        dispatch(function() {
+          return 42;
+        })
+      )
+      .on('end', ended);
+
+    function ended() {
+      test.deepEqual(actions, [42]);
+      test.end();
+    }
   }
 );
