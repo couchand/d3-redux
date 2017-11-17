@@ -442,7 +442,7 @@ dispatch of the provided store through the various other methods.
 
 <a href="#reduxConnect" name="reduxConnect">#</a> d3.<b>reduxConnect</b>(<i>function</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/connect.js">&lt;&gt;</a>
 
-Use with *selection*.call:
+Use with *selection*.call or *transition*.call:
 
 ```
 d3.select("svg")
@@ -481,7 +481,8 @@ and DOM sense - it is simply a unary function of the store's state.
 <a href="#reduxDispatch" name="reduxDispatch">#</a> d3.<b>reduxDispatch</b>(<i>actionCreator</i>) <a href="https://github.com/couchand/d3-redux/blob/master/src/dispatch.js">&lt;&gt;</a>
 
 Wraps an *actionCreator* into an event listener to be passed on to the
-enclosing call to [*selection*.on](https://github.com/d3/d3-selection#selection_on).
+enclosing call to [*selection*.on](https://github.com/d3/d3-selection#selection_on)
+or [*transition*.on](https://github.com/d3/d3-transition#transition_on).
 The *actionCreator* is called in the same way that a handler passed to
 `on` would be: it gets the current datum, index, and all the groups,
 and the `this` context is set to the current element.  If the return
