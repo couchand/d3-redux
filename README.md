@@ -400,7 +400,7 @@ current node's datum without computing a data join.
 You may find your code easier to read if you alias the methods on
 import like this:
 
-```
+```js
 import {
   reduxProvide as provide,
   reduxConnect as connect,
@@ -412,7 +412,7 @@ import {
 Then, combined with judicious naming of selectors and action creators,
 you can write code like this:
 
-```
+```js
 d3.select(element)
   .call(provide(store))
   .call(connect(function (el) {
@@ -431,7 +431,7 @@ method chaining style.
 
 Use with *selection*.call:
 
-```
+```js
 d3.select(document.body)
   .call(provide(store));
 ```
@@ -444,7 +444,7 @@ dispatch of the provided store through the various other methods.
 
 Use with *selection*.call or *transition*.call:
 
-```
+```js
 d3.select("svg")
   .call(connect(myCoolChart));
 ```
@@ -459,7 +459,7 @@ but adding a subscription to the provided store.
 
 Use with *selection*.data or *selection*.datum:
 
-```
+```js
 d3.select(".user")
   .datum(fromState(user))
 
