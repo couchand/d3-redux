@@ -60,6 +60,32 @@ tape(
 );
 
 tape(
+  'selection.data(fromState(selector)) passes in the current datum, index, and parents',
+  function(test) {
+    var result = [];
+    var document = jsdom('<div id="a"></div><div id="b"></div>');
+    var a = document.querySelector('#a');
+    var b = document.querySelector('#b');
+    d3
+      .select(document.body)
+      .call(provide(storeOf({})))
+      .selectAll('div')
+      .datum(function(d, i) {
+        return 'parent-' + i;
+      })
+      .selectAll('div')
+      .data(
+        fromState(function(s, d, i, g) {
+          result.push([d, i, g]);
+          return [];
+        })
+      );
+    test.deepEqual(result, [['parent-0', 0, [a, b]], ['parent-1', 1, [a, b]]]);
+    test.end();
+  }
+);
+
+tape(
   'selection.datum(fromState(selector)) gets state from the provided store',
   function(test) {
     var state = { foo: {} };
@@ -94,6 +120,31 @@ tape(
         })
       );
     test.equal(result, el);
+    test.end();
+  }
+);
+
+tape(
+  'selection.datum(fromState(selector)) passes in the current datum, index, and parents',
+  function(test) {
+    var result = [];
+    var document = jsdom('<div id="a"><i></i></div><div id="b"><i></i></div>');
+    var a = document.querySelector('#a i');
+    var b = document.querySelector('#b i');
+    d3
+      .select(document.body)
+      .call(provide(storeOf({})))
+      .selectAll('div')
+      .datum(function(d, i) {
+        return 'parent-' + i;
+      })
+      .select('i')
+      .datum(
+        fromState(function(s, d, i, g) {
+          result.push([d, i, g]);
+        })
+      );
+    test.deepEqual(result, [['parent-0', 0, [a, b]], ['parent-1', 1, [a, b]]]);
     test.end();
   }
 );

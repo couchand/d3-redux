@@ -1,8 +1,8 @@
 import storeLocal from './local';
 
 export default function(selector) {
-  return function() {
+  return function(d, i, g) {
     var store = storeLocal.get(this);
-    return selector.call(this, store.getState());
+    return selector.call(this, store.getState(), d, i, g);
   };
 }
